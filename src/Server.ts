@@ -23,7 +23,8 @@ export const rootDir = __dirname;
   },
   swagger: [
     {
-      path: "/docs"
+      path: "/docs",
+      specVersion: "3.0.1"
     }
   ],
   typeorm: typeormConfig,
