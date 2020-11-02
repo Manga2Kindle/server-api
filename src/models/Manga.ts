@@ -1,12 +1,13 @@
-import { Example, Property, Schema, Required, MaxLength } from "@tsed/schema";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Example, Property, Required, MaxLength, CollectionOf } from "@tsed/schema";
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Author } from "./Author";
 
 @Entity()
 export class Manga {
   constructor(title: string);
   constructor(title: string, id: number);
-  constructor(title: string, id: number, uuid: string, author: Array<string>);
-  constructor(title?: string, id?: number, uuid?: string, author?: Array<string>) {
+  constructor(title: string, id: number, uuid: string, author: Array<Author>);
+  constructor(title?: string, id?: number, uuid?: string, author?: Array<Author>) {
     if (title) {
       this.title = title;
     }
@@ -29,7 +30,7 @@ export class Manga {
   @Property()
   @Column()
   @Required()
-  @MaxLength(250)
+  @MaxLength(255)
   @Example("Sousou no Frieren")
   public title: string;
 
@@ -41,9 +42,11 @@ export class Manga {
   public uuid: string;
 
   @Property()
-  @Column()
   @Required()
-  @Schema({ type: "array", items: { type: "string" } })
-  @Example("['Yamada Kanehito', 'Abe Tsukasa']")
-  public author: Array<string>;
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  @ManyToMany((type) => Author, (author) => author.manga, { cascade: true })
+  @JoinTable()
+  @CollectionOf(Author)
+  @Example([new Author("Yamada Kanehito")])
+  public author: Author[];
 }
