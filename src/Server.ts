@@ -19,7 +19,7 @@ export const rootDir = __dirname;
   httpPort: process.env.PORT || 8083,
   httpsPort: false, // CHANGE
   mount: {
-    "/rest": [`${rootDir}/controllers/**/*.ts`]
+    "/": [`${rootDir}/controllers/**/*.ts`]
   },
   swagger: [
     {
