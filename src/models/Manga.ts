@@ -47,6 +47,6 @@ export class Manga {
   @ManyToMany((type) => Author, (author) => author.manga, { cascade: true })
   @JoinTable()
   @CollectionOf(Author)
-  @Example([new Author("Yamada Kanehito")])
+  @Example(['{ "id": 123, "name": "Yamada Kanehito" }'])
   public author: Author[];
 }

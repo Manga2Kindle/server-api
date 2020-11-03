@@ -14,7 +14,7 @@ export class AuthorController {
   @Returns(200, Author)
   @Returns(404)
   async get(
-    @Description("A author ID")
+    @Description("An author ID")
     @PathParams("id")
     id: number
   ): Promise<Author | void> {
