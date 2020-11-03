@@ -6,4 +6,8 @@ export class MangaRepository extends Repository<Manga> {
   findById(id: number): Promise<Manga | undefined> {
     return this.findOne(id);
   }
+
+  findByTitle(title: string): Promise<Manga[]> {
+    return this.find({ title: title });
+  }
 }

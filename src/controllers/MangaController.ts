@@ -44,7 +44,7 @@ export class MangaController {
       throw new BadRequest("Query too short");
     }
 
-    return await this.mangaService.find();
+    return await this.mangaService.find(query);
   }
 
   @Put()
