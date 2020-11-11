@@ -1,4 +1,4 @@
-import { Repository, EntityRepository } from "typeorm";
+import { Repository, EntityRepository, Like } from "typeorm";
 import { Author } from "../models/Author";
 
 @EntityRepository(Author)
@@ -8,6 +8,6 @@ export class AuthorRepository extends Repository<Author> {
   }
 
   findByName(name: string): Promise<Author[]> {
-    return this.find({ name: name });
+    return this.find({ name: Like("%" + name + "%") });
   }
 }

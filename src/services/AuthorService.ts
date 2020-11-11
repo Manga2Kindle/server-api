@@ -4,6 +4,7 @@ import { Author } from "../models/Author";
 import { AuthorRepository } from "../repositories/AuthorRepository";
 import { CONECTION_NAME } from "./connections/DefaultConnection";
 import { isNaturalNumber } from "../modules/DataValidation";
+import { Exception } from "@tsed/exceptions";
 
 @Injectable()
 export class AuthorService implements AfterRoutesInit {
@@ -25,6 +26,9 @@ export class AuthorService implements AfterRoutesInit {
   }
 
   async findByName(name: string): Promise<Author[]> {
+    if (name.length == 0) {
+      throw new Exception(400);
+    }
     return this.repository.findByName(name);
   }
 }
