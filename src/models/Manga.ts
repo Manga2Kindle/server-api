@@ -1,5 +1,5 @@
 import { Example, Property, Required, MaxLength, CollectionOf } from "@tsed/schema";
-import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinTable, ManyToMany, PrimaryGeneratedColumn, Index } from "typeorm";
 import { Author } from "./Author";
 
 @Entity()
@@ -31,6 +31,7 @@ export class Manga {
   @Column()
   @Required()
   @MaxLength(255)
+  @Index({ unique: true })
   @Example("Sousou no Frieren")
   public title: string;
 
@@ -38,6 +39,7 @@ export class Manga {
   @Column()
   @MaxLength(46)
   @Required()
+  @Index({ unique: true })
   @Example("urn:uuid:12345678-1234-1234-1234-123456789012")
   public uuid: string;
 
