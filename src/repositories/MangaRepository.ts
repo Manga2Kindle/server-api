@@ -1,4 +1,4 @@
-import { Repository, EntityRepository } from "typeorm";
+import { Repository, EntityRepository, Like } from "typeorm";
 import { Manga } from "../models/Manga";
 
 @EntityRepository(Manga)
@@ -8,6 +8,6 @@ export class MangaRepository extends Repository<Manga> {
   }
 
   findByTitle(title: string): Promise<Manga[]> {
-    return this.find({ title: title });
+    return this.find({ title: Like(title) });
   }
 }
