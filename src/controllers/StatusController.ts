@@ -1,7 +1,8 @@
 import { Controller, Get, Put, PathParams } from "@tsed/common";
-import { NotFound } from "@tsed/exceptions";
+import { NotFound, BadRequest } from "@tsed/exceptions";
 import { Description, Returns, Summary } from "@tsed/schema";
 import { Status } from "../models/Status";
+import { isNaturalNumber } from "../modules/DataValidation";
 import { StatusService } from "../services/StatusService";
 
 @Controller("/status")
@@ -12,12 +13,17 @@ export class StatusController {
   @Summary("Get status by id")
   @Description("Returns the status of given ID")
   @Returns(200, Status)
-  @Returns(404)
+  @Returns(400, BadRequest)
+  @Returns(404, NotFound)
   async get(
     @Description("A status ID")
     @PathParams("id")
     id: number
   ): Promise<Status | void> {
+    if (!isNaturalNumber(id)) {
+      throw new BadRequest("Non Natural Number");
+    }
+
     const status = await this.statusService.findByID(id);
     if (status) {
       return status;
