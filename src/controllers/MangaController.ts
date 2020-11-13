@@ -5,10 +5,11 @@ import { Author } from "../models/Author";
 import { Manga } from "../models/Manga";
 import { isNaturalNumber } from "../modules/DataValidation";
 import { MangaService } from "../services/MangaService";
+import { AuthorService } from "../services/AuthorService";
 
 @Controller("/manga")
 export class MangaController {
-  constructor(private mangaService: MangaService) {}
+  constructor(private mangaService: MangaService, private authorService: AuthorService) {}
 
   @Get("/:id")
   @Summary("Get Manga by ID")
@@ -60,7 +61,67 @@ export class MangaController {
     @Res()
     response: Res
   ): Promise<Manga | void> {
+    // sanitalize manga data
+    if (manga.title.length < 3) {
+      throw new BadRequest("Title too short");
+    } else if (manga.id != 0 && manga.id != undefined) {
+      throw new BadRequest("ID must be 0 or undefined");
+    } else if (manga.uuid != undefined && manga.uuid != "") {
+      throw new BadRequest('UUID must be "" (blank) or undefined');
+    } else if (manga.author.length == 0) {
+      throw new BadRequest("You may not add a Manga without author");
+    }
+
+    // set default needed data
+    manga.id = 0;
+    // uuid will end like this: "urn:uuid:12345678-1234-1234-1234-123456789012"
+    manga.uuid =
+      "urn:uuid:" +
+      this.generateRandom(10000000, 100000000) +
+      "-" +
+      this.generateRandom(1000, 10000) +
+      "-" +
+      this.generateRandom(1000, 10000) +
+      "-" +
+      this.generateRandom(1000, 10000) +
+      "-" +
+      this.generateRandom(100000000000, 1000000000000);
+
+    // sanitalize author data
+    for (const key in manga.author) {
+      if (Author.prototype.hasOwnProperty.call(manga.author, key)) {
+        const a = manga.author[key];
+
+        // if author id is not set we take it as a new author
+        if (a.id == undefined) {
+          if (a.name.length < 3) {
+            throw new BadRequest("Author name too short");
+          }
+        } else {
+          // check if author exists
+          const dbAuthor = await this.authorService.findByID(a.id);
+          if (dbAuthor == undefined) {
+            throw new BadRequest("Author id:" + a.id + " does not exists");
+          }
+        }
+      }
+    }
+
+    // and finally: add and return
     manga = await this.mangaService.create(manga);
     response.status(200).send(manga);
   }
+
+  //#region private functions
+
+  /**
+   * Generate a random number between the given values
+   * @param min minimum value inclusive
+   * @param max maximum value exclusive
+   */
+  private generateRandom(min: number, max: number): number {
+    return Math.floor(min + (max - min) * Math.random());
+  }
+
+  //#endregion
 }
