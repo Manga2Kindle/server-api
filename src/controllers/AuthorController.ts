@@ -12,7 +12,7 @@ export class AuthorController {
   @Summary("Get author by id")
   @Description("Returns the author of given ID")
   @Returns(200, Author)
-  @Returns(404)
+  @Returns(404, NotFound)
   async get(
     @Description("An author ID")
     @PathParams("id")
@@ -30,7 +30,7 @@ export class AuthorController {
   @Summary("Search authors")
   @Description("Returns an array with all authors found, it can be an empty array")
   @(Returns(200, Array).Of(Author))
-  @Returns(400)
+  @Returns(400, BadRequest)
   async search(
     @Description("Query param")
     @PathParams("query")
