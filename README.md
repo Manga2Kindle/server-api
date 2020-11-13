@@ -12,3 +12,25 @@ If you really liked it and feel like I deserve some money, you can buy me a [cof
 Copyright &copy; 2019 Eduardo Fernandez.  
 
 **Manga2Kindle API** is released under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License; see _LICENSE_ for further details.
+
+---
+
+> An awesome project based on Ts.ED framework
+
+See [Ts.ED](https://tsed.io) project for more information.
+
+## Build setup
+
+> **Important!** Ts.ED requires Node >= 10, Express >= 4 and TypeScript >= 3.
+
+```batch
+# install dependencies
+$ yarn install
+
+# serve
+$ yarn start
+
+# build for production
+$ yarn build
+$ yarn start:prod
+```
