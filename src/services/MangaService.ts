@@ -16,6 +16,10 @@ export class MangaService implements AfterRoutesInit {
     this.repository = connection.getCustomRepository(MangaRepository);
   }
 
+  async findById(id: number): Promise<Manga | undefined> {
+    return this.repository.findById(id);
+  }
+
   async create(manga: Manga): Promise<Manga> {
     // TODO: validate data
     // TODO: check if exists
