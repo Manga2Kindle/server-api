@@ -1,5 +1,4 @@
 import { env } from "process";
-console.log(env.TYPEORM_CONNECTION);
 export const name = "default";
 export const type = env.TYPEORM_CONNECTION;
 export const host = env.TYPEORM_HOST;
