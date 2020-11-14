@@ -1,5 +1,5 @@
 import { BodyParams, Controller, Get, PathParams, Put, Res } from "@tsed/common";
-import { BadRequest } from "@tsed/exceptions";
+import { BadRequest, NotFound } from "@tsed/exceptions";
 import { Summary, Description, Returns } from "@tsed/schema";
 import { Author } from "../models/Author";
 import { Manga } from "../models/Manga";
@@ -16,19 +16,23 @@ export class MangaController {
   @Description("Returns a manga")
   @Returns(200, Manga)
   @Returns(400, BadRequest)
-  get(
+  @Returns(404, NotFound)
+  async get(
     @Description("A manga ID")
     @PathParams("id")
     id: number
-  ): unknown {
+  ): Promise<Manga | void> {
     if (!isNaturalNumber(id)) {
       throw new BadRequest("Not a valid ID");
     }
 
-    return new Manga("Sousou no Frieren", id, "urn:uuid:12345678-1234-1234-1234-123456789012", [
-      new Author("Yamada Kanehito"),
-      new Author("Abe Tsukasa")
-    ]);
+    const manga = await this.mangaService.findById(id);
+
+    if (manga instanceof Manga) {
+      return manga;
+    } else {
+      throw new NotFound("This ID does not exists");
+    }
   }
 
   @Get("/search/:query")
