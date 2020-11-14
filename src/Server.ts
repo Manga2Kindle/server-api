@@ -23,7 +23,7 @@ export const rootDir = __dirname;
   },
   swagger: [
     {
-      path: "/docs",
+      path: process.env.SWAGGER_PATH || "/docs",
       specVersion: "3.0.1"
     }
   ],
