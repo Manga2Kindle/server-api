@@ -10,6 +10,7 @@ import "@tsed/ajv";
 import "@tsed/swagger";
 import "@tsed/typeorm";
 import typeormConfig from "./config/typeorm";
+import MulterS3Storage from "./modules/S3StorageEngine";
 
 export const rootDir = __dirname;
 
@@ -28,7 +29,10 @@ export const rootDir = __dirname;
     }
   ],
   typeorm: typeormConfig,
-  exclude: ["**/*.spec.ts"]
+  exclude: ["**/*.spec.ts"],
+  multer: {
+    storage: new MulterS3Storage()
+  }
 })
 export class Server {
   @Inject()

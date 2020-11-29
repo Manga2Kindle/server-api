@@ -28,4 +28,16 @@ export class StatusService implements AfterRoutesInit {
     }
     return this.repository.findById(id);
   }
+
+  async exists(id: number): Promise<boolean> {
+    if (!isNaturalNumber(id)) {
+      throw new Error("Non Natural Number");
+    }
+
+    const element = await this.repository.findById(id);
+
+    if (element) return true;
+
+    return false;
+  }
 }
