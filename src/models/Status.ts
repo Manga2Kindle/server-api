@@ -1,5 +1,5 @@
 import { Example, Property } from "@tsed/schema";
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 export const STATUS = {
   REGISTERED: 10,
@@ -36,4 +36,9 @@ export class Status {
   @Column()
   @Example(STATUS.REGISTERED, STATUS.UPLOADING, STATUS.ERROR)
   public status: number;
+
+  @BeforeInsert()
+  private beforeInsert() {
+    this.id = Math.floor(0 + 2147483647 * Math.random()); // random from 0 to max int(11) value
+  }
 }
