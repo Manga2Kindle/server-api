@@ -1,4 +1,86 @@
-import { Controller } from "@tsed/common";
+import { Controller, Get, MultipartFile, PathParams, PlatformMulterFile, Post, Put } from "@tsed/common";
+import { BadRequest, Exception, InternalServerError, NotFound } from "@tsed/exceptions";
+import { Description, Returns, Summary } from "@tsed/schema";
+import { Status } from "../models/Status";
+import { isNaturalNumber } from "../modules/DataValidation";
+import S3Storage from "../modules/S3Storage";
+import { StatusService } from "../services/StatusService";
 
 @Controller("/chapter")
-export class ChapterController {}
+export class ChapterController {
+  constructor(private statusService: StatusService) {}
+
+  @Put()
+  @Summary("Register a new chapter")
+  @Description("Returns a new status")
+  @Returns(200, Status)
+  async register(): Promise<Status> {
+    return this.statusService.create();
+  }
+
+  @Get("/:id")
+  @Summary("Get chapter status by id")
+  @Description("Returns the status of given ID")
+  @Returns(200, Status)
+  @Returns(400, BadRequest)
+  @Returns(404, NotFound)
+  async get(
+    @Description("A status ID")
+    @PathParams("id")
+    id: number
+  ): Promise<Status | void> {
+    if (!isNaturalNumber(id)) {
+      throw new BadRequest("Non Natural Number");
+    }
+
+    const status = await this.statusService.findByID(id);
+    if (status) {
+      return status;
+    } else {
+      throw new NotFound("ID not found");
+    }
+  }
+
+  @Post("/:id/:page")
+  @Summary("Add new chapter page")
+  @Description(
+    'Upload chapter pages, one by one.<br>This call has an extra parameter named "file" in the body, it is a multipart to attach a page.'
+  )
+  @(Returns(201).Description("Created, no response expected"))
+  @Returns(400, BadRequest)
+  @Returns(404, NotFound)
+  async post(
+    @Description("A status (chapter) ID")
+    @PathParams("id")
+    id: number,
+    @Description("A page number")
+    @PathParams("page")
+    page: number,
+    @Description("A page file")
+    @MultipartFile("file")
+    file: PlatformMulterFile
+  ): Promise<string | Exception> {
+    return new Promise<string | Exception>(async (resolve, reject) => {
+      try {
+        if (!isNaturalNumber(id)) {
+          throw new BadRequest("ID is not a Number");
+        }
+        if (!isNaturalNumber(page)) {
+          throw new BadRequest("Page is not a Number");
+        }
+
+        if (!(await this.statusService.exists(id))) {
+          throw new NotFound("Chapter ID was not found");
+        }
+
+        resolve();
+      } catch (error) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        new S3Storage().deleteFile(file.path, (error: any, metadata?: any) => {
+          if (error) reject(new InternalServerError("An error ocurred while managing the file (" + metadata + ")"));
+          else reject(error);
+        });
+      }
+    });
+  }
+}
