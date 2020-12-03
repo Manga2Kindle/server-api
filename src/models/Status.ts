@@ -18,12 +18,16 @@ export class Status {
   constructor();
   constructor(id: number);
   constructor(id: number, status: number);
-  constructor(id?: number, status?: number) {
+  constructor(id: number, status: number, pages?: number);
+  constructor(id?: number, status?: number, pages?: number) {
     if (id) {
       this.id = id;
     }
     if (status) {
       this.status = status;
+    }
+    if (pages) {
+      this.pages = pages;
     }
   }
 
@@ -36,6 +40,9 @@ export class Status {
   @Column()
   @Example(STATUS.REGISTERED, STATUS.UPLOADING, STATUS.ERROR)
   public status: number;
+
+  @Column()
+  public pages: number;
 
   @BeforeInsert()
   private beforeInsert() {

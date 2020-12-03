@@ -17,8 +17,8 @@ export class StatusService implements AfterRoutesInit {
     this.repository = connection.getCustomRepository(StatusRepository);
   }
 
-  async create(): Promise<Status> {
-    const status = new Status(0, STATUS.REGISTERED);
+  async create(pages?: number): Promise<Status> {
+    const status = new Status(0, STATUS.REGISTERED, pages);
     return this.repository.manager.save(status);
   }
 
