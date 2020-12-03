@@ -1,6 +1,7 @@
-import { Controller, Get, MultipartFile, PathParams, PlatformMulterFile, Post, Put } from "@tsed/common";
+import { BodyParams, Controller, Get, MultipartFile, PathParams, PlatformMulterFile, Post, Put } from "@tsed/common";
 import { BadRequest, Exception, InternalServerError, NotFound } from "@tsed/exceptions";
 import { Description, Returns, Summary } from "@tsed/schema";
+import { Chapter } from "../models/Chapter";
 import { Status } from "../models/Status";
 import { isNaturalNumber } from "../modules/DataValidation";
 import S3Storage from "../modules/S3Storage";
@@ -14,8 +15,21 @@ export class ChapterController {
   @Summary("Register a new chapter")
   @Description("Returns a new status")
   @Returns(200, Status)
-  async register(): Promise<Status> {
-    return this.statusService.create();
+  async register(
+    @Description("This object has a Manga and the chapter settings")
+    @BodyParams()
+    chapter: Chapter
+  ): Promise<Status | Exception> {
+    return new Promise<Status | Exception>(async (resolve, reject) => {
+      const status = await this.statusService.create(chapter.pages);
+      const path = status.id + "/ChapterData.json";
+
+      new S3Storage().putFile(path, JSON.stringify(chapter), (error, metadata) => {
+        if (error) reject(new InternalServerError("An error ocurred while managing the file (" + metadata + ")"));
+
+        resolve(status);
+      });
+    });
   }
 
   @Get("/:id")
