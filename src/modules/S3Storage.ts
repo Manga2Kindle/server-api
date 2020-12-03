@@ -5,16 +5,18 @@ import s3 from "../config/s3";
 
 export default class S3Storage {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public putFile(path: string, file: Buffer, cb: (error: any, metadata?: any) => void): void {
+  public putFile(path: string, file: Buffer | string, cb: (error: any, metadata?: any) => void): void {
     const params: S3.Types.PutObjectRequest = {
       Bucket: process.env.S3_BUCKET as string,
       Key: path,
       Body: file
     };
 
-    if (file.byteLength > 10485760) {
-      // 10MB
-      return cb(new Exception(400, "File too big"));
+    if (file instanceof Buffer) {
+      if (file.byteLength > 10485760) {
+        // 10MB
+        return cb(new Exception(400, "File too big"));
+      }
     }
 
     s3.putObject(params)
