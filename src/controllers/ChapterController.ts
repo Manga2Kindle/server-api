@@ -1,8 +1,8 @@
-import { BodyParams, Controller, Get, MultipartFile, PathParams, PlatformMulterFile, Post, Put } from "@tsed/common";
+import { BodyParams, Controller, Get, MultipartFile, Patch, PathParams, PlatformMulterFile, Post, Put } from "@tsed/common";
 import { BadRequest, Exception, InternalServerError, NotFound } from "@tsed/exceptions";
 import { Description, Returns, Summary } from "@tsed/schema";
 import { Chapter } from "../models/Chapter";
-import { Status } from "../models/Status";
+import { STATUS, Status } from "../models/Status";
 import { isNaturalNumber } from "../modules/DataValidation";
 import S3Storage from "../modules/S3Storage";
 import { StatusService } from "../services/StatusService";
@@ -52,6 +52,37 @@ export class ChapterController {
       return status;
     } else {
       throw new NotFound("ID not found");
+    }
+  }
+
+  @Patch("/:id/:status")
+  @Summary("Update a chapter status")
+  @Description("Does not return anything, just status codes")
+  @Returns(204)
+  @Returns(400)
+  @Returns(404)
+  async patch(
+    @Description("A status ID")
+    @PathParams("id")
+    id: number,
+    @Description("A status code")
+    @PathParams("status")
+    status: number
+  ): Promise<void> {
+    if (!isNaturalNumber(id) || !isNaturalNumber(status)) {
+      throw new BadRequest("Non Natural Number");
+    }
+
+    // CHECK IF STATUS CODE EXISTS
+    if (!Object.values(STATUS).includes(status)) {
+      throw new BadRequest("Not a valid status code");
+    }
+    const statusObject = new Status(id, status);
+    const editResponse = await this.statusService.edit(statusObject);
+    if (editResponse == undefined) {
+      throw new NotFound("ID not found");
+    } else {
+      return;
     }
   }
 

@@ -40,4 +40,12 @@ export class StatusService implements AfterRoutesInit {
 
     return false;
   }
+
+  async edit(status: Status): Promise<Status | undefined> {
+    if (await this.exists(status.id)) {
+      return this.repository.manager.save(status);
+    } else {
+      return undefined;
+    }
+  }
 }
