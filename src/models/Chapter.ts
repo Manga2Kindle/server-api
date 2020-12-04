@@ -24,4 +24,9 @@ export class Chapter {
   @Required()
   @Example(24)
   public pages: number;
+
+  @Property()
+  @Required()
+  @Example("manga2kindle@kindle_email.com")
+  public email: string;
 }
