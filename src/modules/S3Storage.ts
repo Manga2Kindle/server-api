@@ -5,6 +5,19 @@ import s3 from "../config/s3";
 
 export default class S3Storage {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public getFileList(path: string, cb: (error: any, metadata?: any) => void): void {
+    const params: S3.Types.ListObjectsRequest = {
+      Bucket: process.env.S3_BUCKET as string,
+      Prefix: path
+    };
+
+    s3.listObjects(params, (err: AWSError, data: S3.ListObjectsOutput) => {
+      if (err) return cb(err);
+      else cb(null, data);
+    });
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public putFile(path: string, file: Buffer | string, cb: (error: any, metadata?: any) => void): void {
     const params: S3.Types.PutObjectRequest = {
       Bucket: process.env.S3_BUCKET as string,
