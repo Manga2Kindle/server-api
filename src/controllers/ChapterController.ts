@@ -104,8 +104,8 @@ export class ChapterController {
     @Description("A page file")
     @MultipartFile("file")
     file: PlatformMulterFile
-  ): Promise<string | Exception> {
-    return new Promise<string | Exception>(async (resolve, reject) => {
+  ): Promise<void | Exception> {
+    return new Promise<void | Exception>(async (resolve, reject) => {
       try {
         if (!isNaturalNumber(id)) {
           throw new BadRequest("ID is not a Number");
