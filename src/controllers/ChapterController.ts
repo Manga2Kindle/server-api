@@ -17,7 +17,7 @@ export class ChapterController {
   @Returns(200, Status)
   async register(
     @Description("This object has a Manga and the chapter settings")
-    @BodyParams("chapter")
+    @BodyParams()
     chapter: Chapter
   ): Promise<Status | Exception> {
     return new Promise<Status | Exception>(async (resolve, reject) => {
