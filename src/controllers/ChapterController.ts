@@ -131,7 +131,7 @@ export class ChapterController {
           axios.defaults.baseURL = process.env.MANGA2KINDLE_WORKER;
 
           axios
-            .get(id.toString())
+            .put(id.toString())
             .then((res) => {
               if (res.status != 200) {
                 reject(new ServiceUnvailable("Worker reply: " + res.status + ": " + res.statusText));
