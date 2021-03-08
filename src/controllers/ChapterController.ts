@@ -1,4 +1,4 @@
-import { BodyParams, Controller, Get, MultipartFile, Patch, PathParams, PlatformMulterFile, Post, Put } from "@tsed/common";
+import { BodyParams, Controller, Delete, Get, MultipartFile, Patch, PathParams, PlatformMulterFile, Post, Put } from "@tsed/common";
 import { BadRequest, Exception, InternalServerError, NotFound, ServiceUnvailable } from "@tsed/exceptions";
 import { Description, Returns, Summary } from "@tsed/schema";
 import axios from "axios";
@@ -51,6 +51,34 @@ export class ChapterController {
     const status = await this.statusService.findByID(id);
     if (status) {
       return status;
+    } else {
+      throw new NotFound("ID not found");
+    }
+  }
+
+  @Delete("/:id")
+  @Summary("Deletes a status")
+  @Description("Used when a status is used and nno longer needed. Does not return anything.")
+  @Returns(204)
+  @Returns(400)
+  @Returns(404)
+  async delete(
+    @Description("A status ID")
+    @PathParams("id")
+    id: number
+  ): Promise<void> {
+    if (!isNaturalNumber(id)) {
+      throw new BadRequest("Non Natural Number");
+    }
+
+    const status = await this.statusService.findByID(id);
+    if (status) {
+      if (status.status >= STATUS.DONE) {
+        await this.statusService.delete(id);
+        return;
+      } else {
+        throw new BadRequest("Not due to delete");
+      }
     } else {
       throw new NotFound("ID not found");
     }

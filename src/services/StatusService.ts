@@ -48,4 +48,9 @@ export class StatusService implements AfterRoutesInit {
       return undefined;
     }
   }
+
+  async delete(id: number): Promise<boolean> {
+    await this.repository.delete(id);
+    return true;
+  }
 }
