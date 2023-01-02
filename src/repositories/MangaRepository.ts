@@ -1,13 +1,14 @@
-import { Repository, EntityRepository, Like } from "typeorm";
+import { registerProvider } from "@tsed/di";
+import { Like } from "typeorm";
+import { BetterSqlite3DataSource } from "../datasources/TypeormDatasource";
 import { Manga } from "../models/Manga";
 
-@EntityRepository(Manga)
-export class MangaRepository extends Repository<Manga> {
+export const MangaRepository = BetterSqlite3DataSource.getRepository(Manga).extend({
   findById(id: number): Promise<Manga | undefined> {
     return this.findOne(id, {
       relations: ["author"]
     });
-  }
+  },
 
   findByTitle(title: string): Promise<Manga[]> {
     return this.find({
@@ -15,4 +16,11 @@ export class MangaRepository extends Repository<Manga> {
       relations: ["author"]
     });
   }
-}
+});
+export const MANGA_REPOSITORY = Symbol.for("MangaRepository");
+export type MANGA_REPOSITORY = typeof MangaRepository;
+
+registerProvider({
+  provide: MANGA_REPOSITORY,
+  useValue: MangaRepository
+});

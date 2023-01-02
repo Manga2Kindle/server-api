@@ -1,20 +1,14 @@
-import { AfterRoutesInit, Injectable } from "@tsed/common";
-import { TypeORMService } from "@tsed/typeorm";
+import { Inject, Injectable, InjectorService } from "@tsed/common";
 import { Manga } from "../models/Manga";
-import { MangaRepository } from "../repositories/MangaRepository";
-import { CONECTION_NAME } from "./connections/DefaultConnection";
+import { MANGA_REPOSITORY } from "../repositories/MangaRepository";
 
 @Injectable()
-export class MangaService implements AfterRoutesInit {
-  private repository: MangaRepository;
+export class MangaService {
+  @Inject()
+  protected injector: InjectorService;
 
-  constructor(private typeORMService: TypeORMService) {}
-
-  $afterRoutesInit(): void {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const connection = this.typeORMService.get(CONECTION_NAME)!; // get connection by name
-    this.repository = connection.getCustomRepository(MangaRepository);
-  }
+  @Inject(MANGA_REPOSITORY)
+  private repository: MANGA_REPOSITORY;
 
   async findById(id: number): Promise<Manga | undefined> {
     return this.repository.findById(id);

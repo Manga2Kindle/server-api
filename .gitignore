@@ -52,3 +52,8 @@ test/**/*.js.map
 /public
 /dist
 .env
+
+# Database
+manga2kindle.sqlite
+manga2kindle.sqlite-shm
+manga2kindle.sqlite-wal

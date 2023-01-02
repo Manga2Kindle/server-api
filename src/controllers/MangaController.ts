@@ -38,7 +38,7 @@ export class MangaController {
   @Get("/search/:query")
   @Summary("Search a manga")
   @Description("Returns an array with all mangas found, it can be an empty array")
-  @(Returns(200, Array).Of(Manga))
+  @Returns(200, Array).Of(Manga)
   @Returns(400, BadRequest)
   async search(
     @Description("Query param")
@@ -55,8 +55,8 @@ export class MangaController {
   @Put()
   @Summary("Add new manga")
   @Description("Add a manga if not exists")
-  @(Returns(200, Manga).Description("Manga already exists"))
-  @(Returns(201, Manga).Description("A new manga was created"))
+  @Returns(200, Manga).Description("Manga already exists")
+  @Returns(201, Manga).Description("A new manga was created")
   @Returns(400, BadRequest)
   async put(
     @Description("Manga object")

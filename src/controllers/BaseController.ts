@@ -1,5 +1,5 @@
-import { Controller, Get } from "@tsed/common";
-import { Description, Returns, Summary } from "@tsed/schema";
+import { Description, Get, Returns, Summary } from "@tsed/schema";
+import { Controller } from "@tsed/di";
 import { Hello } from "../models/Hello";
 
 @Controller("/")

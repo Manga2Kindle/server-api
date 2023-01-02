@@ -29,7 +29,7 @@ export class AuthorController {
   @Get("/search/:query")
   @Summary("Search authors")
   @Description("Returns an array with all authors found, it can be an empty array")
-  @(Returns(200, Array).Of(Author))
+  @Returns(200, Array).Of(Author)
   @Returns(400, BadRequest)
   async search(
     @Description("Query param")

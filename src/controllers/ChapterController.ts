@@ -120,12 +120,12 @@ export class ChapterController {
   @Description(
     'Upload chapter pages, one by one.<br>This call has an extra parameter named "file" in the body, it is a multipart to attach a page.'
   )
-  @(Returns(201).Description("Created, no response expected"))
+  @Returns(201).Description("Created, no response expected")
   @Returns(400, BadRequest)
   @Returns(404, NotFound)
-  @(Returns(503, ServiceUnvailable).Description(
+  @Returns(503, ServiceUnvailable).Description(
     "Service Unavailable<br>If we need to convert the chapter and there is no response from the worker"
-  ))
+  )
   async post(
     @Description("A status (chapter) ID")
     @PathParams("id")

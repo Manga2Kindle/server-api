@@ -1,22 +1,16 @@
-import { AfterRoutesInit, Injectable } from "@tsed/common";
-import { TypeORMService } from "@tsed/typeorm";
+import { Inject, Injectable, InjectorService } from "@tsed/common";
 import { Author } from "../models/Author";
-import { AuthorRepository } from "../repositories/AuthorRepository";
-import { CONECTION_NAME } from "./connections/DefaultConnection";
 import { isNaturalNumber } from "../modules/DataValidation";
 import { Exception } from "@tsed/exceptions";
+import { AUTHOR_REPOSITORY } from "../repositories/AuthorRepository";
 
 @Injectable()
-export class AuthorService implements AfterRoutesInit {
-  private repository: AuthorRepository;
+export class AuthorService {
+  @Inject()
+  protected injector: InjectorService;
 
-  constructor(private typeORMService: TypeORMService) {}
-
-  $afterRoutesInit(): void {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const connection = this.typeORMService.get(CONECTION_NAME)!; // get connection by name
-    this.repository = connection.getCustomRepository(AuthorRepository);
-  }
+  @Inject(AUTHOR_REPOSITORY)
+  private repository: AUTHOR_REPOSITORY;
 
   async findByID(id: number): Promise<Author | undefined> {
     if (!isNaturalNumber(id)) {

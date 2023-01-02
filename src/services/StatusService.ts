@@ -1,22 +1,15 @@
-import { AfterRoutesInit, Injectable } from "@tsed/common";
-import { TypeORMService } from "@tsed/typeorm";
-import { CONECTION_NAME } from "./connections/DefaultConnection";
+import { Inject, Injectable, InjectorService } from "@tsed/common";
 import { Status, STATUS } from "../models/Status";
-import { StatusRepository } from "../repositories/StatusRepository";
+import { STATUS_REPOSITORY } from "../repositories/StatusRepository";
 import { isNaturalNumber } from "../modules/DataValidation";
 
 @Injectable()
-export class StatusService implements AfterRoutesInit {
-  private repository: StatusRepository;
+export class StatusService {
+  @Inject()
+  protected injector: InjectorService;
 
-  constructor(private typeORMService: TypeORMService) {}
-
-  $afterRoutesInit(): void {
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    const connection = this.typeORMService.get(CONECTION_NAME)!; // get connection by name
-    this.repository = connection.getCustomRepository(StatusRepository);
-  }
-
+  @Inject(STATUS_REPOSITORY)
+  private repository: STATUS_REPOSITORY;
   async create(pages?: number): Promise<Status> {
     const status = new Status(0, STATUS.REGISTERED, pages);
     return this.repository.manager.save(status);
