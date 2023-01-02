@@ -47,7 +47,7 @@ export class Manga {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   @ManyToMany((type) => Author, (author) => author.manga, { cascade: true })
   @JoinTable()
-  @CollectionOf(Author)
+  @CollectionOf(() => Author)
   @Example(['{ "id": 123, "name": "Yamada Kanehito" }'])
   public author: Author[];
 }
