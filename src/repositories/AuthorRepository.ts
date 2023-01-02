@@ -1,6 +1,6 @@
 import { registerProvider } from "@tsed/di";
 import { Like } from "typeorm";
-import { BetterSqlite3DataSource } from "../datasources/TypeormDatasource";
+import { BetterSqlite3DataSource } from "../datasources/BetterSqlite3Datasource";
 import { Author } from "../models/Author";
 
 export const AuthorRepository = BetterSqlite3DataSource.getRepository(Author).extend({

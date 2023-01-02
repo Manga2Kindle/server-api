@@ -1,5 +1,5 @@
 import { registerProvider } from "@tsed/di";
-import { BetterSqlite3DataSource } from "../datasources/TypeormDatasource";
+import { BetterSqlite3DataSource } from "../datasources/BetterSqlite3Datasource";
 import { Status } from "../models/Status";
 
 export const StatusRepository = BetterSqlite3DataSource.getRepository(Status).extend({
