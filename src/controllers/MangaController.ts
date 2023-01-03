@@ -106,6 +106,8 @@ export class MangaController {
           const dbAuthor = await this.authorService.findByID(a.id);
           if (dbAuthor == undefined) {
             throw new BadRequest("Author id:" + a.id + " does not exists");
+          } else {
+            manga.author[key] = dbAuthor;
           }
         }
       }
