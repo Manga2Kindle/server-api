@@ -5,7 +5,7 @@ import { Manga } from "../models/Manga";
 
 export const MangaRepository = BetterSqlite3DataSource.getRepository(Manga).extend({
   findById(id: number): Promise<Manga | undefined> {
-    return this.findOne(id, {
+    return this.findOneBy({ id: id }, {
       relations: ["author"]
     });
   },
