@@ -4,7 +4,7 @@ import { Status } from "../models/Status";
 
 export const StatusRepository = BetterSqlite3DataSource.getRepository(Status).extend({
   findById(id: number): Promise<Status | undefined> {
-    return this.findOne(id);
+    return this.findOneBy({ id: id });
   }
 });
 export const STATUS_REPOSITORY = Symbol.for("StatusRepository");
