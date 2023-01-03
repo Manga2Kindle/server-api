@@ -58,7 +58,7 @@ export class ChapterController {
 
   @Delete("/:id")
   @Summary("Deletes a status")
-  @Description("Used when a status is used and nno longer needed. Does not return anything.")
+  @Description("Used when a status is used and no longer needed. Does not return anything.")
   @Returns(204)
   @Returns(400)
   @Returns(404)
