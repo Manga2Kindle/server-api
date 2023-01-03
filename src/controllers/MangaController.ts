@@ -77,7 +77,7 @@ export class MangaController {
     }
 
     // set default needed data
-    manga.id = 0;
+    // manga.id = 0;
     // uuid will end like this: "urn:uuid:12345678-1234-1234-1234-123456789012"
     manga.uuid =
       "urn:uuid:" +
