@@ -1,4 +1,4 @@
-import { Example, Property, Required, MaxLength } from "@tsed/schema";
+import { Example, Property, MaxLength } from "@tsed/schema";
 import { Column, Entity, Index, ManyToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Manga } from "./Manga";
 
@@ -21,7 +21,6 @@ export class Author {
 
   @Property()
   @Column()
-  @Required()
   @MaxLength(50)
   @Index({ unique: true })
   @Example("Yamada Kanehito")
