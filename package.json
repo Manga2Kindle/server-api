@@ -7,7 +7,7 @@
     "barrels": "barrelsby --config .barrelsby.json",
     "tsc:w": "tsc --project tsconfig.compile.json -w",
     "start": "npm run barrels && npm run tsc:w & nodemon -w dist dist/index.js",
-    "start:prod": "npm run barrels && npm run tsc && cross-env NODE_ENV=production node dist/index.js",
+    "start:prod": "npm run build && cross-env NODE_ENV=production node dist/index.js",
     "test:lint": "eslint src --ext .ts",
     "test:lint:fix": "eslint src --ext .ts --fix",
     "prettier": "prettier '{src,test}/**/*.ts' --write",
